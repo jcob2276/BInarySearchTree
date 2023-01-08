@@ -3,6 +3,8 @@
 
 using namespace std;
 
+//inicjowanie struktury
+
 class TreeNode {
   public:
     int value;
@@ -69,16 +71,85 @@ class BST {
 
  void print2D(TreeNode *r, int space)
 {
-	if (r == NULL) //
-	return;
-	space += SPACE; // Zwiekszanie dystansu pomiedzy poziomami
-	print2D(r->right, space);
-	cout <<endl;
-	for (int i = SPACE; i <space; i++) //pokaz obecne struktury
-	cout << " ";
-	cout << r->value<<"\n";
-	print2D(r->left, space);
+if (r == NULL)
+return;
+space += SPACE; // Zwiększanie odległości między poziomami
+print2D(r->left, space); // Zamiana miejscami wywołań dla lewego i prawego potomka
+cout <<endl;
+for (int i = SPACE; i <space; i++) //pokaz obecne struktury
+cout << " ";
+cout << r->value<<"\n";
+print2D(r->right, space); // Zamiana miejscami wywołań dla lewego i prawego potomka
 }
+
+TreeNode * iterativeSearch(int v) {
+    if (root == NULL) {
+      return root;
+    } else {
+      TreeNode * temp = root;
+      while (temp != NULL) {
+        if (v == temp -> value) {
+          return temp;
+        } else if (v < temp -> value) {
+          temp = temp -> left;
+        } else {
+          temp = temp -> right;
+        }
+      }
+      return NULL;
+    }
+  }
+
+// usuwanie elementów  2 funkcje
+
+
+TreeNode * minValueNode(TreeNode * node) {
+    TreeNode * current = node;
+    /* znajdujemy liść najbardziej wysunięty na lewo */
+    while (current -> left != NULL) {
+      current = current -> left;
+    }
+    return current;
+  }
+
+  TreeNode * deleteNode(TreeNode * r, int v) {
+    if (r == NULL) {
+      return NULL;
+    }
+    // Jeśli klucz do usunięcia jest mniejszy niż klucz główny,
+     // wtedy leży w lewym poddrzewie
+    else if (v < r -> value) {
+      r -> left = deleteNode(r -> left, v);
+    }
+    // Jeśli klucz do usunięcia jest większy niż klucz roota,
+     // to leży w prawym poddrzewie
+    else if (v > r -> value) {
+      r -> right = deleteNode(r -> right, v);
+    }
+// jeśli klucz jest taki sam jak klucz roota, to jest to węzeł do usunięcia
+    else {
+// węzeł z jednym dzieckiem lub bez dziecka 
+      if (r -> left == NULL) {
+        TreeNode * temp = r -> right;
+        delete r;
+        return temp;
+      } else if (r -> right == NULL) {
+        TreeNode * temp = r -> left;
+        delete r;
+        return temp;
+      } else {
+     // węzeł z dwójką dzieci: Pobierz następcę w kolejności (najmniejszy
+         // w prawym poddrzewie)
+        TreeNode * temp = minValueNode(r -> right);
+        // Skopiuj zawartość następnika kolejności do tego węzła
+        r -> value = temp -> value;
+       // Usuń następcę w kolejności
+        r -> right = deleteNode(r -> right, temp -> value);
+      }
+    }
+    return r;
+  }
+
 };
 
 int main() {
@@ -90,8 +161,8 @@ int main() {
 	cout <<" Wybierz numer aby wykonac operacje "<< endl;
 
 	cout << "1. Wstaw wartosc" << endl;
-	cout << "2. Szukaj wartosc" << endl;
-	cout << "3. Usun wartosc" << endl;
+	cout << "2. Usun wartosc" << endl;
+	cout << "3. Szukaj" << endl;
 	cout << "4. Pokaz wyglad drzewa" << endl;
 	cout << "0. Konczy program " <<endl;
 		
@@ -111,13 +182,28 @@ int main() {
 			obj.insertNode(new_node);
 			cout<< endl;
 			break;
-  	case 2:
-			cout<<"Szukanie" <<endl;
-			// wybor wstawiania
-			break;
-		case 3:
-			cout<<"Usuwanie" <<endl;
-			// wybor wstawiania
+		case 2:
+      cout << "Usuwanie" << endl;
+      cout << "jaka wartosc chcesz usunac ";
+      cin >> val;
+      new_node = obj.iterativeSearch(val);
+      if (new_node != NULL) {
+        obj.deleteNode(obj.root, val);
+        cout << "Wartosc znaleziona" << endl;
+      } else {
+        cout << "Wartosc nie znaleziona" << endl;
+      }
+		break;
+  	case 3:
+		  cout << "Szukaj" << endl;
+      cout << "Jakiej wartosci szukasz? ";
+      cin >> val;
+      new_node = obj.iterativeSearch(val);
+      if (new_node != NULL) {
+        cout << "Wartosc znaleziona" << endl;
+      } else {
+        cout << "Wartosc nie znaleziona" << endl;
+      }
 			break;
 		case 4:
 			cout<<"Wyglad drzewa" <<endl;
