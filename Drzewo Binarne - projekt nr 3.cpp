@@ -7,10 +7,12 @@ using namespace std;
 
 class TreeNode {
   public:
-    int value;
-  TreeNode * left;
-  TreeNode * right;
+    // pola publiczne dla przechowywania informacji o wezle drzewa
+    int value; // wartość przechowywana w wezle
+    TreeNode * left; // wskaźnik na lewe dziecko wezła
+    TreeNode * right; // wskaźnik na prawe dziecko wezła
 
+  // konstruktory do tworzenia nowych wezłów
   TreeNode() {
     value = 0;
     left = NULL;
@@ -23,12 +25,18 @@ class TreeNode {
   }
 };
 
+// inicjalizacja klasy drzewa binarnego
 class BST {
   public:
+    // pole publiczne dla przechowywania wskaźnika na korzeń drzewa
     TreeNode * root;
+
+  // konstruktor do tworzenia nowych drzew
   BST() {
     root = NULL;
   }
+
+  // metoda do sprawdzania, czy drzewo jest puste
   bool isTreeEmpty() {
     if (root == NULL) {
       return true;
@@ -82,33 +90,84 @@ cout << r->value<<"\n";
 print2D(r->right, space); // Zamiana miejscami wywołań dla lewego i prawego potomka
 }
 
+// funkcja wypisująca wartości w kolejności 
+//preorder (korzeń, lewe poddrzewo, prawe poddrzewo)
+void printPreorder(TreeNode * r)  
+  { // procedura wypisująca wartości 
+  //w kolejności "preorder" (korzeń, lewe poddrzewo, prawe poddrzewo)
+    if (r == NULL)
+      return;
+  // najpierw wypisz wartość aktualnego węzła
+    cout << r -> value << " ";
+// następnie wywołaj procedurę dla lewego poddrzewa
+    printPreorder(r -> left);
+  // na końcu wywołaj procedurę dla prawego poddrzewa
+    printPreorder(r -> right);
+  }
+  
+// funkcja drukująca elementy drzewa w porządku inorder (lewe dziecko, aktualny węzeł, prawe dziecko)
+void printInorder(TreeNode * r)
+{
+    // jeśli węzeł jest pusty, zakończ funkcję
+    if (r == NULL)
+      return;
+    // rekurencyjnie drukujemy lewe dziecko
+    printInorder(r -> left);
+    // następnie drukujemy wartość węzła
+    cout << r -> value << " ";
+    // na końcu rekurencyjnie drukujemy prawe dziecko
+    printInorder(r -> right);
+}  
+  // procedura wyświetlająca drzewo w kolejności (lewe poddrzewo, prawe poddrzewo, korzeń)
+  void printPostorder(TreeNode * r) 
+  {  // jeśli wezel jest pusty, zakończ procedurę
+    if (r == NULL)
+      return;
+    // najpierw przejdź rekurencyjnie do lewego poddrzewa
+    printPostorder(r -> left);
+    // następnie przejdź rekurencyjnie do prawego poddrzewa
+    printPostorder(r -> right);
+   // aktualny wezel
+    cout << r -> value << " ";
+  }
+// funkcja iteracyjnej wyszukiwania w drzewie BST
 TreeNode * iterativeSearch(int v) {
+    // jeśli korzeń jest pusty, zwracamy pusty wskaźnik
     if (root == NULL) {
       return root;
-    } else {
+    } // w przeciwnym razie przechodzimy przez drzewo za pomocą wskaźnika temp
+    else {
       TreeNode * temp = root;
+      // dopóki temp nie jest pusty, sprawdzamy czy wartość szukanego węzła jest równa wartości temp
       while (temp != NULL) {
         if (v == temp -> value) {
+          // jeśli tak, zwracamy wskaźnik temp
           return temp;
-        } else if (v < temp -> value) {
+        } // jeśli wartość szukanego węzła jest mniejsza niż wartość temp, przechodzimy w lewo
+        else if (v < temp -> value) {
           temp = temp -> left;
-        } else {
+        } // w przeciwnym razie przechodzimy w prawo
+        else {
           temp = temp -> right;
         }
-      }
+      } // jeśli temp stał się pusty, a szukany węzeł nie został znaleziony, zwracamy pusty wskaźnik
       return NULL;
     }
   }
 
+
 // usuwanie elementów  2 funkcje
 
-
+// funkcja zwraca wskaźnik na wezel z najmniejszą wartością w drzewie BST
 TreeNode * minValueNode(TreeNode * node) {
+    // utworzenie wskaźnika current i ustawienie go na podany wezel
     TreeNode * current = node;
     /* znajdujemy liść najbardziej wysunięty na lewo */
     while (current -> left != NULL) {
+      // przypisanie lewego dziecka do current, aby przejść niżej w drzewie
       current = current -> left;
     }
+    // zwracamy wezel z najmniejszą wartością
     return current;
   }
 
@@ -143,7 +202,7 @@ TreeNode * minValueNode(TreeNode * node) {
         TreeNode * temp = minValueNode(r -> right);
         // Skopiuj zawartość następnika kolejności do tego węzła
         r -> value = temp -> value;
-       // Usuń następcę w kolejności
+       // Usuń kolejny element
         r -> right = deleteNode(r -> right, temp -> value);
       }
     }
@@ -209,9 +268,17 @@ int main() {
 			cout<<"Wyglad drzewa" <<endl;
 			obj.print2D(obj.root,5);
 			break;
+		case 5:
+			 cout <<"Kolejnosc: PRE-ORDER: ";
+      	      obj.printPreorder(obj.root);
+      	      cout<<endl;
+      	      cout <<"Kolejnosc IN-ORDER: ";
+      	      obj.printInorder(obj.root);
+      	      cout<<endl;
+      	      cout <<"Kolejnosc: POST-ORDER: ";
+      	      obj.printPostorder(obj.root);
+      break;
     }
-
   } while (wybor != 0);
-
   return 0;
 }
