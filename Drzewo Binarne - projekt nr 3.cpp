@@ -130,6 +130,7 @@ void printInorder(TreeNode * r)
    // aktualny wezel
     cout << r -> value << " ";
   }
+  
 // funkcja iteracyjnej wyszukiwania w drzewie BST
 TreeNode * iterativeSearch(int v) {
     // jeśli korzeń jest pusty, zwracamy pusty wskaźnik
@@ -227,7 +228,7 @@ int main() {
 		
 	cin>> wybor;
  
-    //Node n1;
+   
     TreeNode * new_node = new TreeNode();
 
     switch (wybor) {
